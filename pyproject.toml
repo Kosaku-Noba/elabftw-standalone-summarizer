@@ -1,0 +1,40 @@
+[project]
+name = "elabftw-standalone-summarizer"
+version = "0.1.0"
+description = "Standalone service that summarizes eLabFTW experiment notes via REST API and notifies Teams. Works with eLabFTW 5.6.x and 6.x."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # HTTP client used by the eLabFTW client, Azure/Ollama/llama.cpp-server backends, and Teams notifier.
+    "requests>=2.32.4",
+    "urllib3>=2.5.0",
+    # HTML-to-text conversion for experiment bodies (pipeline).
+    "html2text>=2024.2.26",
+    # Health/metrics API service.
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.6",
+]
+
+[project.optional-dependencies]
+# In-process llama.cpp inference. Requires a C/C++ toolchain to build.
+# Not needed when using the Ollama / llama.cpp HTTP server or Azure OpenAI backends.
+llamacpp = [
+    "llama-cpp-python>=0.2.73",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/standalone_summarizer"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
